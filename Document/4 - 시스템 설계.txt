@@ -1,0 +1,137 @@
+1. 시스템 아키텍처
+1-1. 클라이언트-서버 구조
+클라이언트:
+- Java Swing 또는 JavaFX 기반 데스크톱 애플리케이션.
+- 채팅 및 그림판 UI를 제공하며, 서버와 통신.
+- HTTP와 WebSocket을 통한 실시간 데이터 송수신.
+
+서버:
+- Java Servlet이나 Spring Framework를 기반으로 구축.
+- WebSocket으로 실시간 데이터 처리.
+- MySQL 데이터베이스와 연동해 사용자, 메시지, 그림 데이터를 관리.
+
+2. 주요 컴포넌트
+2-1. 사용자 관리 시스템
+기능:
+- 회원가입, 로그인/로그아웃.
+- 사용자 상태(온라인/오프라인) 관리.
+구현 방식:
+- HttpServlet으로 사용자 인증 처리.
+- 로그인 성공 시 세션/토큰 발급.
+- MySQL 테이블에서 사용자 데이터를 관리.
+
+2-2. 채팅방 관리
+기능:
+- 채팅방 생성, 삭제, 참여, 나가기.
+- 실시간 메시지 전송 및 수신.
+구현 방식:
+- WebSocket 서버를 통해 실시간 메시지 처리.
+- 채팅방과 메시지 데이터를 MySQL에 저장.
+- 채팅방 참여자 목록은 서버 메모리에 캐싱.
+
+2-3. 공유 그림판
+기능:
+- 실시간 공동 작업.
+- 그림판 저장 및 불러오기.
+구현 방식:
+- WebSocket을 통해 작업 동기화.
+- Canvas 데이터를 JSON으로 전송.
+- 작업 내역은 MySQL에 바이너리 또는 JSON 형식으로 저장.
+
+2-4. 데이터 저장 및 검색
+- 채팅 기록과 그림판 데이터는 MySQL에서 관리.
+- 데이터 모델은 아래 데이터베이스 설계에 따라 구성.
+
+3. 데이터베이스 설계
+3-1. 테이블 구조
+Users (사용자 정보):
+- user_id (PK): 고유 사용자 ID.
+- username: 사용자 이름.
+- password: 암호화된 비밀번호.
+- status: 온라인/오프라인 상태.
+----------------------------------------------------------------------
+CREATE TABLE Users (
+    id VARCHAR(45) PRIMARY KEY,
+    username VARCHAR(45) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    status ENUM('ONLINE', 'OFFLINE') DEFAULT 'OFFLINE'
+);
+----------------------------------------------------------------------
+
+Rooms (채팅방 정보):
+- room_id (PK): 고유 채팅방 ID.
+- room_name: 채팅방 이름.
+- is_private: 비공개 여부.
+- created_at: 채팅방 생성 시간.
+----------------------------------------------------------------------
+CREATE TABLE Rooms (
+    room_id INT AUTO_INCREMENT PRIMARY KEY,
+    room_name VARCHAR(100) NOT NULL,
+    is_private BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+----------------------------------------------------------------------
+
+Messages (메시지 기록):
+- message_id (PK): 고유 메시지 ID.
+- room_id (FK): 메시지가 속한 채팅방 ID.
+- user_id (FK): 메시지를 보낸 사용자 ID.
+- message_text: 메시지 내용.
+- sent_at: 메시지 전송 시간.
+----------------------------------------------------------------------
+CREATE TABLE Messages (
+    message_id INT AUTO_INCREMENT PRIMARY KEY,
+    room_id INT NOT NULL,
+    id VARCHAR(45) NOT NULL,
+    message_text TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (room_id) REFERENCES Rooms(room_id),
+    FOREIGN KEY (id) REFERENCES Users(id)
+);
+----------------------------------------------------------------------
+
+Drawings (그림판 데이터):
+- drawing_id (PK): 고유 그림 ID.
+- room_id (FK): 그림판이 속한 채팅방 ID.
+- user_id (FK): 작업한 사용자 ID.
+- drawing_data: 그림 데이터 (JSON, 바이너리 등).
+- updated_at: 마지막 업데이트 시간.
+----------------------------------------------------------------------
+CREATE TABLE Drawings (
+    drawing_id INT AUTO_INCREMENT PRIMARY KEY,
+    room_id INT NOT NULL,
+    user_id INT NOT NULL,
+    drawing_data LONGBLOB NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (room_id) REFERENCES Rooms(room_id),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+----------------------------------------------------------------------
+
+4. 주요 기능 구현
+4-1. 실시간 채팅 (WebSocket)
+서버 측:
+- Java WebSocket API를 사용하여 WebSocket 서버 구축.
+- 각 채팅방은 고유한 room_id를 사용하여 연결된 클라이언트를 분리.
+- 메시지 수신 시 데이터베이스에 저장 후 연결된 클라이언트로 브로드캐스트.
+
+클라이언트 측:
+- WebSocket 클라이언트를 통해 메시지를 송수신.
+- 수신 메시지를 UI에 즉시 반영.
+
+4-2. 공유 그림판
+Canvas 데이터 전송:
+- 그림판 작업을 JSON 형식으로 WebSocket을 통해 전송.
+- JSON 데이터에는 작업 종류(펜, 지우개 등), 좌표, 색상 등의 정보 포함.
+동기화:
+- WebSocket으로 전송된 데이터를 서버에서 처리 후 모든 클라이언트에 브로드캐스트.
+데이터 저장:
+- 작업 종료 시 그림 데이터를 MySQL에 저장.
+
+5. 추가 설계 고려 사항
+세션 관리:
+- 사용자 로그인 상태를 유지하기 위해 Java Servlet의 HttpSession 사용.
+성능 최적화:
+- 그림판 데이터와 채팅 메시지는 일정 기간 이후 아카이빙하여 데이터베이스 부하 감소.
+에러 처리:
+- WebSocket 연결 끊김 및 작업 충돌 방지를 위한 에러 핸들링 로직 추가.

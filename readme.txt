@@ -1,0 +1,1 @@
+LM Studio - llama-3.2-korean-bllossom-3b

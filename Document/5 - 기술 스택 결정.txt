@@ -1,0 +1,26 @@
+프론트엔드 
+- JavaFX, Java Swing(사용자 인터페이스(UI) 구성)
+
+백엔드
+- Java SE, Spring Boot, WebSocket API(실시간 데이터 처리 및 서버 로직 관리)
+
+데이터베이스 
+- MySQL(사용자, 메시지, 그림판 데이터 저장)
+
+빌드 도구 
+- Maven 또는 Gradle(프로젝트 의존성 및 빌드 관리)
+
+실시간 통신
+- Java WebSocket API(채팅 및 그림판 데이터 실시간 송수신)
+
+테스트
+- JUnit, Mockito(애플리케이션 테스트)
+
+서버	
+- Tomcat(HTTP 요청 처리 및 WebSocket 지원)
+
+운영체제	
+- Linux 또는 Windows(개발 및 배포 환경)
+
+버전 관리	
+-Git, GitHub(소스 코드 관리 및 협업)
