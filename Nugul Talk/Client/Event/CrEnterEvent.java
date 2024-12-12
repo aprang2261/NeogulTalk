@@ -38,14 +38,11 @@ public class CrEnterEvent implements ActionListener {
                 String response = reader.readLine();
 
                 if (response.startsWith("JOIN_CHAT_ROOM_SUCCESS")) {
-                    // 성공 시 채팅방 UI 열기
                     String roomName = response.substring("JOIN_CHAT_ROOM_SUCCESS ".length()).trim();
                     new ChatRoomForm(socket, roomName, id);
                 } else if (response.equals("JOIN_CHAT_ROOM_FAIL_ALREADY_IN_ROOM")) {
-                    // 이미 참여 중인 경우에도 UI 열기
                     new ChatRoomForm(socket, name, id);
                 } else {
-                    // 실패 메시지 표시
                     JOptionPane.showMessageDialog(lobbyForm, "채팅방 입장에 실패했습니다: " + response, "입장 실패", JOptionPane.ERROR_MESSAGE);
                 }
             } else {

@@ -271,7 +271,7 @@ public class ChatRoomForm extends JFrame {
                     String response = reader.readLine();
                     if ("DELETE_CHAT_ROOM_SUCCESS".equals(response)) {
                         JOptionPane.showMessageDialog(this, "채팅방이 삭제되었습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
-                        dispose(); // 창 닫기
+                        dispose();
                     } else {
                         JOptionPane.showMessageDialog(this, "채팅방 삭제 실패.", "오류", JOptionPane.ERROR_MESSAGE);
                     }
@@ -305,8 +305,8 @@ public class ChatRoomForm extends JFrame {
             @Override
             public void windowClosing(WindowEvent e) {
                 stopUserListUpdateTimer();
-                stopChatUpdateTimer(); // 타이머 중지
-                dispose(); // 창 닫기
+                stopChatUpdateTimer();
+                dispose();
             }
         });
 
@@ -324,7 +324,6 @@ public class ChatRoomForm extends JFrame {
         }
     }
 
-    // 채팅 기록 불러오기
     private void loadChatHistory() {
         try {
             PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
@@ -337,7 +336,6 @@ public class ChatRoomForm extends JFrame {
             while (!(line = reader.readLine()).equals("END_OF_HISTORY")) {
                 chatHistory.append(line).append("\n");
             }
-            // UI 갱신은 Swing 이벤트 디스패치 스레드에서 수행
             SwingUtilities.invokeLater(() -> chat2.setText(chatHistory.toString()));
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -345,7 +343,6 @@ public class ChatRoomForm extends JFrame {
         }
     }
 
-    // 채팅 기록 업데이트를 위한 타이머 시작
     private void startChatUpdateTimer() {
         chatUpdateTimer = new Timer(1000, new ActionListener() {
             @Override
@@ -372,10 +369,9 @@ public class ChatRoomForm extends JFrame {
             StringBuilder userListData = new StringBuilder();
             String line;
             while (!(line = reader.readLine()).equals("END_OF_USER_LIST")) {
-                userListData.append(line).append("\n"); // 유저와 접속 시간 추가
+                userListData.append(line).append("\n");
             }
 
-            // UI 갱신은 Swing 이벤트 디스패치 스레드에서 수행
             SwingUtilities.invokeLater(() -> userList.setText(userListData.toString()));
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -393,7 +389,6 @@ public class ChatRoomForm extends JFrame {
         userListUpdateTimer.start();
     }
 
-    // 유저 목록 업데이트 타이머 중지
     private void stopUserListUpdateTimer() {
         if (userListUpdateTimer != null) {
             userListUpdateTimer.stop();
@@ -410,7 +405,6 @@ public class ChatRoomForm extends JFrame {
             String chatRoomNameValue = null;
             String chatRoomCreateTimeValue = null;
 
-            // 서버 응답 처리
             String line;
             while (!(line = reader.readLine()).equals("END_OF_DETAILS")) {
                 if (line.startsWith("CHAT_ROOM_NAME")) {
@@ -420,7 +414,6 @@ public class ChatRoomForm extends JFrame {
                 }
             }
 
-            // JLabel에 데이터 설정 (Swing UI 갱신은 이벤트 디스패치 스레드에서 수행)
             String finalChatRoomNameValue = chatRoomNameValue;
             String finalChatRoomCreateTimeValue = chatRoomCreateTimeValue;
             SwingUtilities.invokeLater(() -> {
@@ -441,8 +434,8 @@ public class ChatRoomForm extends JFrame {
         private Image image;
         private Graphics2D g2;
         private int currentX, currentY, oldX, oldY;
-        private Color currentColor = Color.BLACK; // 기본 색상
-        private int strokeWidth = 2; // 기본 선 굵기
+        private Color currentColor = Color.BLACK;
+        private int strokeWidth = 2;
 
         public DrawingPanel() {
             setDoubleBuffered(false);
@@ -466,7 +459,6 @@ public class ChatRoomForm extends JFrame {
                         g2.drawLine(oldX, oldY, currentX, currentY);
                         repaint();
 
-                        // 서버로 데이터 전송
                         sendDrawingDataToServer(oldX, oldY, currentX, currentY, currentColor, strokeWidth);
 
                         oldX = currentX;
@@ -514,9 +506,7 @@ public class ChatRoomForm extends JFrame {
         public void sendDrawingDataToServer(int startX, int startY, int endX, int endY, Color color, int strokeWidth) {
             try {
                 PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())));
-                // 색상 정보를 RGB 값으로 변환
                 int colorRGB = color.getRGB();
-                // 데이터 전송
                 writer.println("DRAW_LINE " + roomName + " " + id + " " + startX + " " + startY + " " + endX + " " + endY + " " + colorRGB + " " + strokeWidth);
                 writer.flush();
             } catch (IOException ex) {
@@ -541,43 +531,39 @@ public class ChatRoomForm extends JFrame {
             String line;
             while (!(line = reader.readLine()).equals("END_OF_DRAWING_DATA")) {
                 try {
-                    // 데이터를 공백으로 분리
                     String[] data = line.split(" ");
                     if (data.length < 7) {
                         System.err.println("Invalid data format: " + line);
-                        continue; // 잘못된 데이터는 건너뛰기
+                        continue;
                     }
 
-                    // 데이터 파싱
                     int drawingId = Integer.parseInt(data[0]);
                     int startX = Integer.parseInt(data[1]);
                     int startY = Integer.parseInt(data[2]);
                     int endX = Integer.parseInt(data[3]);
                     int endY = Integer.parseInt(data[4]);
 
-                    // 색상 데이터 처리 (RGB 값 또는 HEX 코드)
                     Color color;
                     try {
-                        color = Color.decode(data[5]); // 색상이 HEX 코드인 경우
+                        color = Color.decode(data[5]);
                     } catch (NumberFormatException e) {
-                        color = new Color(Integer.parseInt(data[5])); // 색상이 정수 RGB인 경우
+                        color = new Color(Integer.parseInt(data[5]));
+
+                        int strokeWidth = Integer.parseInt(data[6]);
+
+                        drawingPanel.drawLine(startX, startY, endX, endY, color, strokeWidth);
+
+                        lastDrawingId = drawingId;
+                    } catch (Exception e) {
+                        System.err.println("Error processing line: " + line);
+                        e.printStackTrace();
                     }
-
-                    int strokeWidth = Integer.parseInt(data[6]);
-
-                    // DrawingPanel에 데이터 반영
-                    drawingPanel.drawLine(startX, startY, endX, endY, color, strokeWidth);
-
-                    // 마지막 ID 업데이트
-                    lastDrawingId = drawingId;
-                } catch (Exception e) {
-                    System.err.println("Error processing line: " + line);
-                    e.printStackTrace();
+                } catch (NumberFormatException e) {
+                    throw new RuntimeException(e);
                 }
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "그림 데이터 로드 실패", "오류", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 }

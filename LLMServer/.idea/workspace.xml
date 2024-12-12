@@ -1,15 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="32d2ba2b-2c3d-4cc5-9e03-0c4227f6af86" name="변경" comment="" />
+    <list default="true" id="32d2ba2b-2c3d-4cc5-9e03-0c4227f6af86" name="변경" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/llamaApi.py" beforeDir="false" afterPath="$PROJECT_DIR$/llamaApi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/CrCreateConfirmEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/CrCreateConfirmEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/CrCreateEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/CrCreateEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/CrEnterEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/CrEnterEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/EChangeConfirmEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/EChangeConfirmEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/EChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/EChangeEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/IPEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/IPEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/LoginEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/LoginEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/LogoutEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/LogoutEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/NnChangeConfirmEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/NnChangeConfirmEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/NnChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/NnChangeEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/PwChangeConfirmEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/PwChangeConfirmEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/PwChangeEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/PwChangeEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/RegisterConfirmEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/RegisterConfirmEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Event/ResignEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Event/ResignEvent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Form/ChatRoomForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Form/ChatRoomForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Form/IPForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Form/IPForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Form/LobbyForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Form/LobbyForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Form/LoginForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Form/LoginForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Client/Form/RegisterForm.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Client/Form/RegisterForm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Server.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Server/ClientHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Server/ClientHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Server/DatabaseManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Server/DatabaseManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../Nugul Talk/Server/MessageHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../Nugul Talk/Server/MessageHandler.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 3
-}]]></component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
   <component name="ProjectId" id="2pupmJgRbmeZGdx2VbT5ERiBfqV" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -19,7 +49,8 @@
   "keyToString": {
     "Python.LLMServer.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "last_opened_file_path": "C:/Users/NJ/Desktop/Nugul Talk/LLMServer",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "C:/Users/NJ/Documents/GitHub/NeogulTalk/LLMServer",
     "nodejs_package_manager_path": "npm",
     "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
     "vue.rearranger.settings.migration": "true"
@@ -67,6 +98,8 @@
       <option name="presentableId" value="Default" />
       <updated>1733625971305</updated>
       <workItem from="1733625972319" duration="81000" />
+      <workItem from="1733732122002" duration="2000" />
+      <workItem from="1733970921928" duration="47000" />
     </task>
     <servers />
   </component>

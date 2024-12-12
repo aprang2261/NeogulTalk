@@ -21,10 +21,8 @@ public class NnChangeConfirmEvent implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // 입력된 닉네임 가져오기
         String newNickname = nnChangeForm.getNnField().getText().trim();
 
-        // 닉네임 유효성 검사
         if (newNickname.isEmpty()) {
             JOptionPane.showMessageDialog(nnChangeForm, "닉네임은 공백일 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
             return;
@@ -36,15 +34,13 @@ public class NnChangeConfirmEvent implements ActionListener {
         }
 
         try {
-            // 서버로 닉네임 변경 요청 전송
             String message = "UPDATE_NICKNAME " + id + " " + newNickname;
             sendMessage(socket, message);
 
-            // 서버 응답 처리
             String response = receiveMessage(socket);
             if (response.equals("UPDATE_NICKNAME_SUCCESS")) {
                 JOptionPane.showMessageDialog(nnChangeForm, "닉네임이 성공적으로 변경되었습니다.");
-                nnChangeForm.dispose(); // 창 닫기
+                nnChangeForm.dispose();
             } else if (response.equals("UPDATE_NICKNAME_FAIL_DUPLICATE")) {
                 JOptionPane.showMessageDialog(nnChangeForm, "닉네임이 중복되었습니다. 다른 닉네임을 입력하세요.", "오류", JOptionPane.ERROR_MESSAGE);
             } else {

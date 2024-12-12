@@ -10,7 +10,7 @@ import java.io.*;
 import java.net.Socket;
 
 public class EChangeConfirmEvent implements ActionListener {
-    private EChangeForm eChangeForm; // 이메일 입력 창
+    private EChangeForm eChangeForm;
     private Socket socket;
     private String id;
 
@@ -22,10 +22,8 @@ public class EChangeConfirmEvent implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // 입력된 이메일 가져오기
         String newEmail = eChangeForm.geteField().getText().trim();
 
-        // 이메일 유효성 검사
         if (newEmail.isEmpty()) {
             JOptionPane.showMessageDialog(eChangeForm, "이메일은 공백일 수 없습니다.", "오류", JOptionPane.ERROR_MESSAGE);
             return;
@@ -37,15 +35,13 @@ public class EChangeConfirmEvent implements ActionListener {
         }
 
         try {
-            // 서버로 이메일 변경 요청 전송
             String message = "UPDATE_EMAIL " + id + " " + newEmail;
             sendMessage(socket, message);
 
-            // 서버 응답 처리
             String response = receiveMessage(socket);
             if (response.equals("UPDATE_EMAIL_SUCCESS")) {
                 JOptionPane.showMessageDialog(eChangeForm, "이메일이 성공적으로 변경되었습니다.");
-                eChangeForm.dispose(); // 창 닫기
+                eChangeForm.dispose();
             } else if (response.equals("UPDATE_EMAIL_FAIL_DUPLICATE")) {
                 JOptionPane.showMessageDialog(eChangeForm, "이메일이 중복되었습니다. 다른 이메일을 입력하세요.", "오류", JOptionPane.ERROR_MESSAGE);
             } else {
@@ -58,7 +54,6 @@ public class EChangeConfirmEvent implements ActionListener {
     }
 
     private boolean isValidEmail(String email) {
-        // 간단한 이메일 형식 확인 (정규식)
         String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return email.matches(emailRegex);
     }

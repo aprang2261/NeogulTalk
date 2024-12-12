@@ -8,10 +8,10 @@ import java.net.Socket;
 import java.sql.SQLException;
 
 public class ClientHandler implements Runnable {
-    private Socket clientSocket;         // 클라이언트 소켓
-    private BufferedReader in;          // 클라이언트로부터의 입력 스트림
-    private PrintWriter out;            // 클라이언트로의 출력 스트림
-    private MessageHandler messageHandler; // 메시지 처리 핸들러
+    private Socket clientSocket;
+    private BufferedReader in;
+    private PrintWriter out;
+    private MessageHandler messageHandler;
 
     public ClientHandler(Socket clientSocket) throws IOException, SQLException {
         this.clientSocket = clientSocket;
@@ -24,21 +24,20 @@ public class ClientHandler implements Runnable {
     public void run() {
         try {
             String clientMessage;
-            // 클라이언트 메시지 처리 루프
+
             while ((clientMessage = in.readLine()) != null) {
                 messageHandler.processClientMessage(clientMessage);
             }
+
         } catch (IOException e) {
             System.err.println("클라이언트 통신 오류: " + e.getMessage());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         } finally {
-            // 리소스 정리
             closeResources();
         }
     }
 
-    // 리소스 정리 메서드
     private void closeResources() {
         try {
             if (in != null) in.close();

@@ -21,7 +21,6 @@ public class LoginForm extends JFrame {
         loginEvent = new LoginEvent(this, socket);
         registerEvent = new RegisterEvent(this, socket);
 
-        // 창 설정
         setTitle("너굴톡");
         setSize(900, 600);
         setLocationRelativeTo(null);
@@ -30,7 +29,6 @@ public class LoginForm extends JFrame {
         getContentPane().setBackground(Color.WHITE);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // 로고
         JLabel logo = new JLabel("");
         logo.setBounds(395, 130, 100, 100);
 
@@ -41,38 +39,32 @@ public class LoginForm extends JFrame {
 
         logo.setIcon(newicon);
 
-        // 타이틀
         JLabel title = new JLabel("너굴톡");
         title.setBounds(350, 220, 200, 20);
         title.setFont(new Font("AppleSDGothicNeoB00", Font.PLAIN, 20));
         title.setHorizontalAlignment(JLabel.CENTER);
 
-        // 아이디
         JLabel id = new JLabel("ID");
         id.setBounds(320, 268, 25, 30);
         id.setFont(new Font("AppleSDGothicNeoB00", Font.PLAIN, 15));
         id.setHorizontalAlignment(JLabel.CENTER);
 
-        // 아이디 입력 칸
         idField = new JTextField(20);
         idField.setFont(new Font("AppleSDGothicNeoB00", Font.PLAIN, 13));
         idField.setBounds(350, 270, 200, 30);
         Border border = BorderFactory.createLineBorder(Color.BLACK, 5);
         idField.setBorder(border);
 
-        // 비밀번호
         JLabel pw = new JLabel("PW");
         pw.setBounds(320, 308, 25, 30);
         pw.setFont(new Font("AppleSDGothicNeoB00", Font.PLAIN, 15));
         pw.setHorizontalAlignment(JLabel.CENTER);
 
-        // 비밀번호 입력 칸
         pwField = new JPasswordField(20);
         pwField.setFont(new Font("AppleSDGothicNeoB00", Font.PLAIN, 13));
         pwField.setBounds(350, 310, 200, 30);
         pwField.setBorder(border);
 
-        // 로그인 버튼
         login = new JButton("로그인");
         login.setFont(new Font("AppleSDGothicNeoB00", Font.PLAIN, 15));
         login.setBounds(350, 350, 90, 30);
@@ -80,7 +72,6 @@ public class LoginForm extends JFrame {
         login.setContentAreaFilled(false);
         login.addActionListener(loginEvent);
 
-        // 회원가입 버튼
         register = new JButton("회원가입");
         register.setFont(new Font("AppleSDGothicNeoB00", Font.PLAIN, 15));
         register.setBounds(460, 350, 90, 30);
@@ -88,7 +79,6 @@ public class LoginForm extends JFrame {
         register.setContentAreaFilled(false);
         register.addActionListener(registerEvent);
 
-        // 활성화
         add(logo);
         add(title);
         add(id);

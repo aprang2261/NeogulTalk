@@ -30,7 +30,6 @@ public class PwChangeConfirmEvent implements ActionListener {
                 String currentPassword = pwChangeForm.getCurrentPwField().getText();
                 String changePassword = pwChangeForm.getChangePwField().getText();
 
-                // 입력값 검증
                 if (currentPassword.isEmpty() || changePassword.isEmpty()) {
                     JOptionPane.showMessageDialog(pwChangeForm, "모든 필드를 입력해주세요.", "오류", JOptionPane.ERROR_MESSAGE);
                     return;
@@ -47,7 +46,6 @@ public class PwChangeConfirmEvent implements ActionListener {
                     return;
                 }
 
-                // 서버에 비밀번호 변경 메시지 전송
                 String message = "CHANGE_PASSWORD " + id + " " + currentPassword + " " + changePassword;
                 sendMessage(socket, message);
                 String response = receiveMessage(socket);
@@ -88,7 +86,6 @@ public class PwChangeConfirmEvent implements ActionListener {
         }
     }
 
-    // 메시지를 소켓을 통해 서버에 전송하는 메서드
     private void sendMessage(Socket socket, String message) throws IOException {
         BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
         writer.write(message);
@@ -96,7 +93,6 @@ public class PwChangeConfirmEvent implements ActionListener {
         writer.flush();
     }
 
-    // 소켓을 통해 서버로부터 메시지를 받아오는 메서드
     private String receiveMessage(Socket socket) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         return reader.readLine();

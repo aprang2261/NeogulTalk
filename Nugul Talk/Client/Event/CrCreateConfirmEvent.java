@@ -34,10 +34,8 @@ public class CrCreateConfirmEvent implements ActionListener {
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-            // 서버로 요청 전송
             out.println("CREATE_ROOM " + id + " " + roomName);
 
-            // 서버 응답 대기
             String response = in.readLine();
             if (response != null) {
                 switch (response) {

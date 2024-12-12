@@ -135,7 +135,6 @@ public class DatabaseManager implements AutoCloseable {
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, id);
 
-                // 쿼리 실행 및 결과 처리
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
                     if (resultSet.next()) {
                         String storedHash = resultSet.getString("pw"); // 데이터베이스에 저장된 해시값
@@ -156,7 +155,7 @@ public class DatabaseManager implements AutoCloseable {
             statement.setString(1, hashedPassword);
             statement.setString(2, id);
             int rowsUpdated = statement.executeUpdate();
-            return rowsUpdated > 0;  // 비밀번호 변경 성공 여부 반환
+            return rowsUpdated > 0;
         }
     }
 
@@ -183,7 +182,7 @@ public class DatabaseManager implements AutoCloseable {
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, id);
             int rowsAffected = pstmt.executeUpdate();
-            return rowsAffected > 0; // 삭제 성공 여부 반환
+            return rowsAffected > 0;
         }
     }
 
@@ -284,7 +283,7 @@ public class DatabaseManager implements AutoCloseable {
             stmt.setString(1, userId);
             stmt.setString(2, roomName);
             try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next() && rs.getInt(1) > 0; // 존재 여부 반환
+                return rs.next() && rs.getInt(1) > 0;
             }
         }
     }
@@ -310,8 +309,8 @@ public class DatabaseManager implements AutoCloseable {
                 "JOIN users u ON m.id = u.id " +
                 "JOIN rooms r ON m.room_id = r.room_id " +
                 "WHERE r.room_name = ? " +
-                "ORDER BY m.sent_at DESC " + // 최근 메시지부터 가져옴
-                "LIMIT ?"; // 메시지 개수 제한
+                "ORDER BY m.sent_at DESC " +
+                "LIMIT ?";
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, roomName);
@@ -321,7 +320,7 @@ public class DatabaseManager implements AutoCloseable {
                 while (rs.next()) {
                     String userName = rs.getString("name");
                     String messageText = rs.getString("message_text");
-                    String sentTime = rs.getString("sent_time"); // 포맷된 날짜 및 시간
+                    String sentTime = rs.getString("sent_time");
                     chatHistory.add("[" + sentTime + "] " + userName + ": " + messageText);
                 }
             }
@@ -363,7 +362,6 @@ public class DatabaseManager implements AutoCloseable {
     }
 
     public void deleteRoomWithDependencies(String roomName) throws SQLException {
-        // drawings, messages, room_users, rooms 테이블 삭제 쿼리
         String deleteDrawingsQuery = "DELETE d FROM drawings d " +
                 "JOIN rooms r ON d.room_id = r.room_id " +
                 "WHERE r.room_name = ?";
@@ -380,19 +378,15 @@ public class DatabaseManager implements AutoCloseable {
              PreparedStatement deleteRoomUsersStmt = connection.prepareStatement(deleteRoomUsersQuery);
              PreparedStatement deleteRoomStmt = connection.prepareStatement(deleteRoomQuery)) {
 
-            // drawings 삭제
             deleteDrawingsStmt.setString(1, roomName);
             deleteDrawingsStmt.executeUpdate();
 
-            // messages 삭제
             deleteMessagesStmt.setString(1, roomName);
             deleteMessagesStmt.executeUpdate();
 
-            // room_users 삭제
             deleteRoomUsersStmt.setString(1, roomName);
             deleteRoomUsersStmt.executeUpdate();
 
-            // rooms 삭제
             deleteRoomStmt.setString(1, roomName);
             deleteRoomStmt.executeUpdate();
         }
@@ -411,7 +405,7 @@ public class DatabaseManager implements AutoCloseable {
                 }
             }
         }
-        return null; // 채팅방이 존재하지 않을 경우
+        return null;
     }
 
     public void saveDrawingDataToDatabase(String roomName, String userId, int startX, int startY, int endX, int endY, int colorRGB, int strokeWidth) throws SQLException {
@@ -464,7 +458,7 @@ public class DatabaseManager implements AutoCloseable {
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, roomName);
             int rowsDeleted = stmt.executeUpdate();
-            return rowsDeleted > 0; // 삭제 성공 여부 반환
+            return rowsDeleted > 0;
         }
     }
 

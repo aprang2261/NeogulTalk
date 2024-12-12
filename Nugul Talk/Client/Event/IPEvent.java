@@ -21,7 +21,6 @@ public class IPEvent implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // IP 주소 가져오기
         String enteredIpAddress = ipForm.getIpAddress();
 
         UIManager.put("OptionPane.messageFont", new Font("AppleSDGothicNeoB00", Font.PLAIN, 13));
@@ -32,19 +31,16 @@ public class IPEvent implements ActionListener {
             return;
         }
 
-        // IP 유효성 검사
         if (!isValidIpAddress(enteredIpAddress)) {
             JOptionPane.showMessageDialog(ipForm, "올바르지 않은 IP 주소입니다.");
             return;
         }
 
-        // 서버 연결 시도
         try {
             socket = new Socket();
             socket.connect(new InetSocketAddress(enteredIpAddress, 1207), 1000);
             JOptionPane.showMessageDialog(ipForm, "서버와 연결되었습니다.");
 
-            // 로그인 폼 생성 및 현재 폼 닫기
             SwingUtilities.invokeLater(() -> {
                 new LoginForm(socket);
                 ipForm.dispose();
@@ -56,7 +52,6 @@ public class IPEvent implements ActionListener {
         }
     }
 
-    // 유효한 IP 주소인지 확인하는 메서드
     private boolean isValidIpAddress(String ipAddress) {
         String[] parts = ipAddress.split("\\.");
         if (parts.length != 4) {

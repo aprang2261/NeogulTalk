@@ -249,7 +249,6 @@ public class MessageHandler {
         }
     }
 
-    // 사용자 등록
     private void registerUser(String name, String email, String id, String pw) throws IOException, SQLException {
         boolean isNameDuplicate = databaseManager.isNameDuplicate(name);
         boolean isEmailDuplicate = databaseManager.isEmailDuplicate(email);
@@ -272,7 +271,6 @@ public class MessageHandler {
         }
     }
 
-    // 사용자 로그인
     private void loginUser(String id, String password) throws IOException {
         boolean userExists = databaseManager.doesUserExist(id);
         if (!userExists) {
@@ -297,7 +295,7 @@ public class MessageHandler {
         }
     }
 
-    private void logoutUser(String id) throws IOException {
+    private void logoutUser(String id) {
         boolean userExists = databaseManager.doesUserExist(id);
 
         if (!userExists) {
@@ -309,8 +307,7 @@ public class MessageHandler {
     }
 
 
-    private void updateNickname(String id, String newNickname) throws IOException, SQLException {
-        // 닉네임이 빈칸인지 확인
+    private void updateNickname(String id, String newNickname) throws SQLException {
         if (newNickname == null || newNickname.trim().isEmpty()) {
             sendMessageToClient("UPDATE_NICKNAME_FAIL_EMPTY");
             return;
@@ -330,8 +327,7 @@ public class MessageHandler {
         }
     }
 
-    private void updateEmail(String id, String newEmail) throws IOException, SQLException {
-        // 이메일이 빈칸인지 확인
+    private void updateEmail(String id, String newEmail) throws SQLException {
         if (newEmail == null || newEmail.trim().isEmpty()) {
             sendMessageToClient("UPDATE_EMAIL_FAIL_EMPTY");
             return;
@@ -351,37 +347,29 @@ public class MessageHandler {
         }
     }
 
-    // 비밀번호 변경
-    private void changePassword(String id, String currentPassword, String newPassword) throws IOException, SQLException {
-        // 현재 비밀번호가 올바른지 확인
+    private void changePassword(String id, String currentPassword, String newPassword) throws SQLException {
         boolean isCurrentPasswordValid = databaseManager.verifyPassword(id, currentPassword);
 
         if (!isCurrentPasswordValid) {
-            // 현재 비밀번호가 잘못된 경우
             sendMessageToClient("CHANGE_PASSWORD_INCORRECT_CURRENT");
-            return; // 이후 로직 실행 방지
+            return;
         }
 
-        // 현재 비밀번호와 새 비밀번호가 동일한지 확인
         boolean isSameAsNewPassword = BCrypt.checkpw(newPassword, databaseManager.getCurrentPasswordHash(id));
         if (isSameAsNewPassword) {
-            // 새 비밀번호와 현재 비밀번호가 동일한 경우
             sendMessageToClient("CHANGE_PASSWORD_EQUAL");
         } else {
-            // 새 비밀번호를 데이터베이스에 저장
             boolean isPasswordChanged = databaseManager.changePassword(id, newPassword);
 
             if (isPasswordChanged) {
-                // 비밀번호 변경 성공
                 sendMessageToClient("CHANGE_PASSWORD_SUCCESS");
             } else {
-                // 비밀번호 변경 실패
                 sendMessageToClient("CHANGE_PASSWORD_FAIL");
             }
         }
     }
 
-    private void resignUser(String id) throws IOException, SQLException {
+    private void resignUser(String id) throws SQLException {
         boolean userExists = databaseManager.doesUserExist(id);
 
         if (!userExists) {
@@ -405,7 +393,7 @@ public class MessageHandler {
             for (String user : users) {
                 userList.append(user).append("\n");
             }
-            userList.append("END_OF_LIST\n"); // 종료 신호 추가
+            userList.append("END_OF_LIST\n");
             out.write(userList.toString());
             out.flush();
         } catch (SQLException e) {
@@ -413,26 +401,22 @@ public class MessageHandler {
         }
     }
 
-    private void askLLM(String question) throws IOException {
-        // LLM 서버 URL
+    private void askLLM(String question) {
         String llmServerUrl = "http://localhost:5000/ask";
         String jsonInput = new JSONObject().put("question", question).toString();
 
         try {
-            // HTTP POST 요청 생성
             URL url = new URL(llmServerUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setDoOutput(true);
 
-            // 질문 전송
             try (OutputStream os = conn.getOutputStream()) {
                 byte[] input = jsonInput.getBytes("utf-8");
                 os.write(input, 0, input.length);
             }
 
-            // LLM 서버 응답 수신
             StringBuilder responseBuilder = new StringBuilder();
             try (BufferedReader br = new BufferedReader(
                     new InputStreamReader(conn.getInputStream(), "utf-8"))) {
@@ -442,11 +426,9 @@ public class MessageHandler {
                 }
             }
 
-            // 응답 처리
             JSONObject jsonResponse = new JSONObject(responseBuilder.toString());
             String answer = jsonResponse.getString("answer");
 
-            // 클라이언트로 응답 전송
             sendMessageToClient("ASK_LLM_SUCCESS " + answer);
 
         } catch (Exception e) {
@@ -455,7 +437,7 @@ public class MessageHandler {
         }
     }
 
-    private void createRoom(String userId, String roomName) throws IOException, SQLException {
+    private void createRoom(String userId, String roomName) throws SQLException {
         boolean isRoomNameDuplicate = databaseManager.isRoomNameDuplicate(roomName);
 
         if (isRoomNameDuplicate) {
@@ -478,7 +460,7 @@ public class MessageHandler {
             for (String room : rooms) {
                 chatRoomList.append(room).append("\n");
             }
-            chatRoomList.append("END_OF_LIST\n"); // 종료 신호 추가
+            chatRoomList.append("END_OF_LIST\n");
             out.write(chatRoomList.toString());
             out.flush();
         } catch (SQLException e) {
@@ -486,7 +468,7 @@ public class MessageHandler {
         }
     }
 
-    private void joinChatRoom(String userId, String roomName) throws IOException, SQLException {
+    private void joinChatRoom(String userId, String roomName) throws SQLException {
         if (!databaseManager.isRoomNameDuplicate(roomName)) {
             sendMessageToClient("JOIN_CHAT_ROOM_FAIL_ROOM_NOT_FOUND");
             return;
@@ -509,10 +491,10 @@ public class MessageHandler {
         try {
             List<String> chatHistory = databaseManager.getRecentChatHistory(roomName, limit);
             for (String chat : chatHistory) {
-                sendMessageToClient(chat); // 각 메시지를 클라이언트에 전송
+                sendMessageToClient(chat);
                 System.out.println(chat);
             }
-            sendMessageToClient("END_OF_HISTORY"); // 메시지 전송 완료 신호
+            sendMessageToClient("END_OF_HISTORY");
         } catch (SQLException e) {
             e.printStackTrace();
             sendMessageToClient("GET_RECENT_CHAT_FAIL_DATABASE_ERROR");
@@ -523,9 +505,9 @@ public class MessageHandler {
         try {
             List<String> userList = databaseManager.getRoomUserListWithTime(roomName);
             for (String user : userList) {
-                sendMessageToClient(user); // 각 유저 정보 전송
+                sendMessageToClient(user);
             }
-            sendMessageToClient("END_OF_USER_LIST"); // 목록 종료 신호
+            sendMessageToClient("END_OF_USER_LIST");
         } catch (SQLException e) {
             e.printStackTrace();
             sendMessageToClient("GET_ROOM_USERS_FAIL_DATABASE_ERROR");
@@ -560,7 +542,6 @@ public class MessageHandler {
         try {
             String[] details = databaseManager.getChatRoomDetails(roomName);
             if (details != null) {
-                // 채팅방 이름과 생성일시 전송
                 sendMessageToClient("CHAT_ROOM_NAME " + details[0]);
                 sendMessageToClient("CHAT_ROOM_CREATE_TIME " + details[1]);
             } else {
@@ -570,7 +551,6 @@ public class MessageHandler {
             e.printStackTrace();
             sendMessageToClient("GET_CHAT_ROOM_DETAILS_FAIL_DATABASE_ERROR");
         } finally {
-            // 데이터 전송 완료 메시지 추가
             sendMessageToClient("END_OF_DETAILS");
         }
     }
@@ -601,7 +581,6 @@ public class MessageHandler {
         }
     }
 
-    // 클라이언트에 메시지 전송
     private void sendMessageToClient(String message) {
         out.println(message);
         out.flush();
